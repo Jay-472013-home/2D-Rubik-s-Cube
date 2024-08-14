@@ -1,0 +1,136 @@
+import pygame
+
+def main():
+    pygame.init()
+    pygame.mixer.init()
+
+    screen = pygame.display.set_mode((360, 360))
+    pygame.display.set_caption("2D Cube")
+
+    turn = pygame.mixer.Sound('turn.mp3')
+
+    class Block:
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+        def move(self, vx, vy):
+            self.x += vx
+            self.y += vy
+
+        def blit(self, tileSize, color):
+            pygame.draw.rect(screen, color, 
+                             (180 + (self.x * tileSize) - (tileSize / 2), 
+                              180 - (self.y * tileSize) - (tileSize / 2), 
+                              tileSize, tileSize))
+
+    def shift(isX, isY, requirement, offset, allChildren):
+        if (isX == True):
+            for i in range(0, len(allChildren)):
+                if ((allChildren[i]).y == requirement):
+                    allChildren[i].move(offset, 0)
+
+                    if(allChildren[i].x > 1):
+                        allChildren[i].x = -1
+
+                    if(allChildren[i].x < -1):
+                        allChildren[i].x = 1
+        if (isY == True):
+            for i in range(0, len(allChildren)):
+                if ((allChildren[i]).x == requirement):
+                    allChildren[i].move(0, offset)
+
+                    if(allChildren[i].y > 1):
+                        allChildren[i].y = -1
+
+                    if(allChildren[i].y < -1):
+                        allChildren[i].y = 1
+
+        turn.play()
+        
+
+    redBlock1 = Block(-1, -1)
+    redBlock2 = Block(-1, 0)
+    redBlock3 = Block(-1, 1)
+    blueBlock1 = Block(0, -1)
+    blueBlock2 = Block(0, 0)
+    blueBlock3 = Block(0, 1)
+    yellowBlock1 = Block(1, -1)
+    yellowBlock2 = Block(1, 0)
+    yellowBlock3 = Block(1, 1)
+
+    blocks = [redBlock1,
+            redBlock2,
+            redBlock3,
+            blueBlock1,
+            blueBlock2,
+            blueBlock3,
+            yellowBlock1,
+            yellowBlock2,
+            yellowBlock3]
+
+    arrow1 = pygame.Rect(0, 60, 60, 80)
+    arrow2 = pygame.Rect(0, 140, 60, 80)
+    arrow3 = pygame.Rect(0, 220, 60, 80)
+    arrow4 = pygame.Rect(300, 60, 60, 80)
+    arrow5 = pygame.Rect(300, 140, 60, 80)
+    arrow6 = pygame.Rect(300, 220, 60, 80)
+    arrow7 = pygame.Rect(60, 0, 80, 60)
+    arrow8 = pygame.Rect(140, 0, 80, 60)
+    arrow9 = pygame.Rect(220, 0, 80, 60)
+    arrow10 = pygame.Rect(60, 300, 80, 60)
+    arrow11 = pygame.Rect(140, 300, 80, 60)
+    arrow12 = pygame.Rect(220, 300, 80, 60)
+
+    arrows = [arrow1, arrow2, arrow3, arrow4, arrow5, arrow6,
+              arrow7, arrow8, arrow9, arrow10, arrow11, arrow12]
+      
+    while True:
+        screen.fill((0, 0, 0))
+
+        mouse_pos = pygame.mouse.get_pos()
+        
+        redBlock1.blit(80, (255, 0, 0))
+        redBlock2.blit(80, (255, 0, 0))
+        redBlock3.blit(80, (255, 0, 0))
+        blueBlock1.blit(80, (0, 0, 255))
+        blueBlock2.blit(80, (0, 0, 255))
+        blueBlock3.blit(80, (0, 0, 255))
+        yellowBlock1.blit(80, (255, 255, 0))
+        yellowBlock2.blit(80, (255, 255, 0))
+        yellowBlock3.blit(80, (255, 255, 0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if arrow1.collidepoint(mouse_pos):
+                    shift(True, False, 1, 1, blocks)
+                elif arrow2.collidepoint(mouse_pos):
+                    shift(True, False, 0, 1, blocks)
+                elif arrow3.collidepoint(mouse_pos):
+                    shift(True, False, -1, 1, blocks)
+                elif arrow4.collidepoint(mouse_pos):
+                    shift(True, False, 1, -1, blocks)
+                elif arrow5.collidepoint(mouse_pos):
+                    shift(True, False, 0, -1, blocks)
+                elif arrow6.collidepoint(mouse_pos):
+                    shift(True, False, -1, -1, blocks)
+                elif arrow7.collidepoint(mouse_pos):
+                    shift(False, True, -1, -1, blocks)
+                elif arrow8.collidepoint(mouse_pos):
+                    shift(False, True, 0, -1, blocks)
+                elif arrow9.collidepoint(mouse_pos):
+                    shift(False, True, 1, -1, blocks)
+                elif arrow10.collidepoint(mouse_pos):
+                    shift(False, True, -1, 1, blocks)
+                elif arrow11.collidepoint(mouse_pos):
+                    shift(False, True, 0, 1, blocks)
+                elif arrow12.collidepoint(mouse_pos):
+                    shift(False, True, 1, 1, blocks) 
+            
+
+        pygame.display.update()
+        
+main()
